@@ -1,18 +1,17 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+package example;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import university.University;
 
-public class SimpleBaseTest {
+class SimpleBaseTest {
 	
 	private static final int FIRST_ID = 10000;
 	private static final int FIRST_CODE = 10;
 	
 	@Test
-	public void testR1() {
+	void testR1() {
 		String universityName = "Politecnico di Torino";
 		
 		University poli = new University(universityName);
@@ -21,12 +20,12 @@ public class SimpleBaseTest {
 		
 		System.out.println("Rector of " + poli.getName() + " : " + poli.getRector());
 
-		assertEquals("Wrong university name", universityName, poli.getName());
-		assertEquals("Wrong rector", "Stefano Corgnati", poli.getRector());
+		assertEquals(universityName, poli.getName(), "Wrong university name");
+		assertEquals("Stefano Corgnati", poli.getRector(), "Wrong rector");
 	}
 		
 	@Test
-	public void testR2() {
+	void testR2() {
 		University poli = new University("PoliTo");
 		int s1 = poli.enroll("Mario","Rossi");
 		int s2 = poli.enroll("Giuseppe","Verdi");
@@ -34,24 +33,24 @@ public class SimpleBaseTest {
 		System.out.println("Enrolled students " + s1 + ", " + s2); // 10000, 10001
 		System.out.println("s1 = " + poli.student(s1)); // 10000 Mario Rossi
 
-		assertEquals("First student id should be "+ FIRST_ID, FIRST_ID, s1 );
-		assertEquals("Second student id should be "+ (FIRST_ID+1), (FIRST_ID+1), s2 );
+		assertEquals(FIRST_ID, s1, "First student id should be "+ FIRST_ID);
+		assertEquals((FIRST_ID+1), s2, "Second student id should be "+ (FIRST_ID+1));
 	}
 		
 	@Test
-	public void testR3() {
+	void testR3() {
 		University poli = new University("PoliTo");
 		int macro = poli.activate("Macro Economics", "Paul Krugman");
 		int oop = poli.activate("Object Oriented Programming", "James Gosling");
 		
 		System.out.println("Activated courses " + macro + " and " + oop); // 10 and 11
 
-		assertEquals("First course id should be "+ FIRST_CODE, FIRST_CODE, macro );
-		assertEquals("Second course id should be "+ (FIRST_CODE+1), (FIRST_CODE+1), oop );
+		assertEquals(FIRST_CODE, macro, "First course id should be "+ FIRST_CODE);
+		assertEquals((FIRST_CODE+1), oop, "Second course id should be "+ (FIRST_CODE+1));
 	}
 		
 	@Test
-	public void testR4() {
+	void testR4() {
 		University poli = new University("PoliTo");
 		int s1 = poli.enroll("Mario","Rossi");
 		int s2 = poli.enroll("Giuseppe","Verdi");
@@ -66,15 +65,15 @@ public class SimpleBaseTest {
 		// 10000 Mario Rossi
 		// 10001 Giuseppe Verdi
 		String attendees = poli.listAttendees(macro);
-		assertNotNull("Missing attendees list", attendees);
-		assertTrue("Missing student Rossi", attendees.contains("Rossi"));
-		assertTrue("Missing student Verdi", attendees.contains("Verdi"));
+		assertNotNull(attendees, "Missing attendees list");
+		assertTrue(attendees.contains("Rossi"));
+		assertTrue(attendees.contains("Verdi"), "Missing student Verdi");
 		
 		System.out.println(poli.studyPlan(s2));
 		// 10,Macro Economics,Paul Krugman
 		// 11,Object Oriented Programming,Marco Torchiano
 		String plan = poli.studyPlan(s2);
-		assertNotNull("Missing study plan", plan);
-		assertTrue("Missing OOP course", plan.contains("Object"));
+		assertNotNull(plan, "Missing study plan");
+		assertTrue(plan.contains("Object"), "Missing OOP course");
 	}
 }

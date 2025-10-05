@@ -1,19 +1,18 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+package example;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.logging.Level;
-
-import org.junit.Test;
 
 import university.University;
 
 /**
  * Test for extended requirements
  */
-public class SimpleExtTest {	
+class SimpleExtTest {	
 	@Test
-	public void testR5() {
+	void testR5() {
 		University poli = new University("PoliTo");
 		int s1 = poli.enroll("Mario","Rossi");
 		int s2 = poli.enroll("Giuseppe","Verdi");
@@ -31,11 +30,11 @@ public class SimpleExtTest {
 		
 		System.out.println(poli.courseAvg(macro)); // 28.5
         
-		assertEquals("Wrong student average", "Student 10001 : 29.0", poli.studentAvg(s2));		
+		assertEquals("Student 10001 : 29.0", poli.studentAvg(s2), "Wrong student average");		
 	}
 
     @Test
-    public void testR6() {
+    void testR6() {
         University poli = new University("PoliTo");
         int s1 = poli.enroll("Mario","Rossi");
         int s2 = poli.enroll("Giuseppe","Verdi");
@@ -53,18 +52,16 @@ public class SimpleExtTest {
 
         String best = poli.topThreeStudents();
 
-        assertNotNull("Missing top students", best);
-        assertTrue("Missing best student Verdi", best.contains("Verdi : 39.0"));
-
-
+        assertNotNull(best, "Missing top students");
+        assertTrue(best.contains("Verdi : 39.0"), "Missing best student Verdi");
     }
 
     private String lastMessage;
     private int logCount;
     @Test
-    public void testR7() {
-        University.logger.setFilter( record -> {
-            lastMessage = record.getMessage();
+    void testR7() {
+        University.logger.setFilter( r -> {
+            lastMessage = r.getMessage();
             logCount++;
             return true;
         });
@@ -75,13 +72,13 @@ public class SimpleExtTest {
         University poli = new University("PoliTo");
         poli.enroll("Mario","Rossi");
 
-        assertEquals("No log message was generated for new enrollment", 1, logCount);
-        assertTrue("Message does not include student name", lastMessage.contains("Rossi"));
+        assertEquals(1, logCount, "No log message was generated for new enrollment");
+        assertTrue(lastMessage.contains("Rossi"), "Message does not include student name");
         
         poli.activate("Macro Economics", "Paul Krugman");
 
-        assertEquals("No log message was generated for new course activation", 2, logCount);
-        assertTrue("Message does not include course title", lastMessage.contains("Economics"));
+        assertEquals(2, logCount, "No log message was generated for new course activation");
+        assertTrue(lastMessage.contains("Economics"), "Message does not include course title");
 
         University.logger.setFilter(null);
     }
