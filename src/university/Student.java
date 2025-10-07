@@ -20,6 +20,14 @@ public class Student {
         attendedCourseList[attendedCourseCount++] = c;
     }
 
+    public Course[] getAttendedCourseList() {
+        return attendedCourseList;
+    }
+
+    public int getAttendedCourseCount() {
+        return attendedCourseCount;
+    }
+
     public int getStudentID() { 
         return studentID;
     }

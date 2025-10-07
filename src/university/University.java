@@ -132,7 +132,10 @@ public class University {
 	 * @param courseCode id of the course
 	 */
 	public void register(int studentID, int courseCode){
-		//TODO: to be implemented
+		Student currentStudent = students[studentID - FIRST_STUDENT_ID];
+		Course currentCourse = courses[courseCode - FIRST_COURSE_ID];
+		currentStudent.addCourse(currentCourse);
+		currentCourse.addStudent(currentStudent);
 	}
 	
 	/**
@@ -145,8 +148,12 @@ public class University {
 	 * @return list of attendees separated by "\n"
 	 */
 	public String listAttendees(int courseCode){
-		//TODO: to be implemented
-		return null;
+		Course currentCourse = courses[courseCode - FIRST_COURSE_ID];
+		String attendeeListPrint = "";
+		for (int i=0; i<currentCourse.getAttendeeCount(); i++) {
+			attendeeListPrint += currentCourse.getAttendeeList()[i].getStudentInfo() + "\n";
+		}
+		return attendeeListPrint;
 	}
 
 	/**
@@ -161,8 +168,12 @@ public class University {
 	 * @return the list of courses the student is registered for
 	 */
 	public String studyPlan(int studentID){
-		//TODO: to be implemented
-		return null;
+		Student currentStudent = students[studentID - FIRST_STUDENT_ID];
+		String attendedCoursesPrint = "";
+		for (int j=0; j<currentStudent.getAttendedCourseCount(); j++) {
+			attendedCoursesPrint += currentStudent.getAttendedCourseList()[j].getCourseInfo() + "\n";
+		}
+		return attendedCoursesPrint;
 	}
 
 // R5

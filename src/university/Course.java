@@ -20,6 +20,14 @@ public class Course {
         attendeeList[attendeeCount++] = s;
     }
 
+    public Student[] getAttendeeList() {
+        return attendeeList;
+    }
+
+    public int getAttendeeCount() {
+        return attendeeCount;
+    }
+
     public String getCourseTitle() {
         return courseTitle;
     }
