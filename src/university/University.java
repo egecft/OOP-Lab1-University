@@ -8,6 +8,19 @@ import java.util.logging.Logger;
  *
  */
 public class University {
+	public static final int MAX_STUDENT_COUNT = 1000;
+	public static final int MAX_COURSE_COUNT = 50;
+    public static final int FIRST_STUDENT_ID = 10000;
+	public static final int FIRST_COURSE_ID = 10;
+
+	private String universityName;
+	private String rectorFirstName;
+	private String rectorLastName;
+	private int studentCount = 0;
+	private int courseCount = 0;
+
+	private Student[] students = new Student[MAX_STUDENT_COUNT];
+	private Course[] courses = new Course[MAX_COURSE_COUNT];
 
 // R1
 	/**
@@ -17,7 +30,8 @@ public class University {
 	public University(String name){
 		// Example of logging
 		// logger.info("Creating extended university object");
-		//TODO: to be implemented
+		// TODO: to be implemented
+		universityName = name;
 	}
 	
 	/**
@@ -26,8 +40,7 @@ public class University {
 	 * @return name of university
 	 */
 	public String getName(){
-		//TODO: to be implemented
-		return null;
+		return universityName;
 	}
 	
 	/**
@@ -37,7 +50,8 @@ public class University {
 	 * @param last	last name of the rector
 	 */
 	public void setRector(String first, String last){
-		//TODO: to be implemented
+		rectorFirstName = first;
+		rectorLastName = last;
 	}
 	
 	/**
@@ -46,8 +60,7 @@ public class University {
 	 * @return name of the rector
 	 */
 	public String getRector(){
-		//TODO: to be implemented
-		return null;
+		return rectorFirstName + " " + rectorLastName;
 	}
 	
 // R2
@@ -61,9 +74,10 @@ public class University {
 	 * 
 	 * @return unique ID of the newly enrolled student
 	 */
-	public int enroll(String first, String last){
-		//TODO: to be implemented
-		return -1;
+	public int enroll(String first, String last) {
+		int studentID = FIRST_STUDENT_ID + studentCount;
+		students[studentCount++] = new Student(first, last, studentID);
+		return studentID;
 	}
 	
 	/**
@@ -74,9 +88,9 @@ public class University {
 	 * 
 	 * @return information about the student
 	 */
-	public String student(int id){
-		//TODO: to be implemented
-		return null;
+	public String student(int studentID) {
+		Student currentStudent = students[studentID - FIRST_STUDENT_ID];
+		return currentStudent.getStudentInfo();
 	}
 	
 // R3
@@ -90,8 +104,9 @@ public class University {
 	 * @return the unique code assigned to the course
 	 */
 	public int activate(String title, String teacher){
-		//TODO: to be implemented
-		return -1;
+		int courseID = FIRST_COURSE_ID + courseCount;
+		courses[courseCount++] = new Course(title, teacher, courseID);
+		return courseID;
 	}
 	
 	/**
@@ -106,8 +121,8 @@ public class University {
 	 * @return information about the course
 	 */
 	public String course(int code){
-		//TODO: to be implemented
-		return null;
+		Course currentCourse = courses[code - FIRST_COURSE_ID];
+		return currentCourse.getCourseInfo();
 	}
 	
 // R4
