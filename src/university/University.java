@@ -8,10 +8,11 @@ import java.util.logging.Logger;
  *
  */
 public class University {
-	public static final int MAX_STUDENT_COUNT = 1000;
-	public static final int MAX_COURSE_COUNT = 50;
-    public static final int FIRST_STUDENT_ID = 10000;
-	public static final int FIRST_COURSE_ID = 10;
+	private static final int MAX_STUDENT_COUNT = 1000;
+	private static final int MAX_COURSE_COUNT = 50;
+    private static final int FIRST_STUDENT_ID = 10000;
+	private static final int FIRST_COURSE_ID = 10;
+	private static final int ABSENT_GRADE = -1;
 
 	private String universityName;
 	private String rectorFirstName;
@@ -28,9 +29,6 @@ public class University {
 	 * @param name name of the university
 	 */
 	public University(String name){
-		// Example of logging
-		// logger.info("Creating extended university object");
-		// TODO: to be implemented
 		universityName = name;
 	}
 	
@@ -77,6 +75,9 @@ public class University {
 	public int enroll(String first, String last) {
 		int studentID = FIRST_STUDENT_ID + studentCount;
 		students[studentCount++] = new Student(first, last, studentID);
+
+		logger.info("New student enrolled: " + studentID + ", " + first + " " + last);
+
 		return studentID;
 	}
 	
@@ -106,6 +107,9 @@ public class University {
 	public int activate(String title, String teacher){
 		int courseID = FIRST_COURSE_ID + courseCount;
 		courses[courseCount++] = new Course(title, teacher, courseID);
+
+		logger.info("New course activated: " + courseID + " " + title + " " + teacher);
+
 		return courseID;
 	}
 	
@@ -136,6 +140,8 @@ public class University {
 		Course currentCourse = courses[courseCode - FIRST_COURSE_ID];
 		currentStudent.addCourse(currentCourse);
 		currentCourse.addStudent(currentStudent);
+
+		logger.info("Student " + studentID + " signed up for course " + courseCode);
 	}
 	
 	/**
@@ -170,8 +176,8 @@ public class University {
 	public String studyPlan(int studentID){
 		Student currentStudent = students[studentID - FIRST_STUDENT_ID];
 		String attendedCoursesPrint = "";
-		for (int j=0; j<currentStudent.getAttendedCourseCount(); j++) {
-			attendedCoursesPrint += currentStudent.getAttendedCourseList()[j].getCourseInfo() + "\n";
+		for (int i=0; i<currentStudent.getAttendedCourseCount(); i++) {
+			attendedCoursesPrint += currentStudent.getAttendedCourseList()[i].getCourseInfo() + "\n";
 		}
 		return attendedCoursesPrint;
 	}
@@ -185,7 +191,15 @@ public class University {
 	 * @param grade		grade ( 0-30)
 	 */
 	public void exam(int studentId, int courseID, int grade) {
-		
+		if (grade < 0 || grade > 30) {
+			return; //didn't learn how to handle errors the best way yet
+		}
+		Student currentStudent = students[studentId - FIRST_STUDENT_ID];
+		Course currentCourse = courses[courseID - FIRST_COURSE_ID];
+		currentStudent.recordExamGrade(currentCourse, grade);
+		currentCourse.recordExamGrade(currentStudent, grade);
+
+		logger.info("Student " + studentId + " took an exam in course " + courseID + " with grade " + grade);
 	}
 
 	/**
@@ -201,7 +215,13 @@ public class University {
 	 * @return the average grade formatted as a string.
 	 */
 	public String studentAvg(int studentId) {
-		return null;
+		Student currentStudent = students[studentId - FIRST_STUDENT_ID];
+		double avg = currentStudent.averageGrade();
+
+		if (avg == ABSENT_GRADE) {
+			return "Student " + String.valueOf(studentId) + " hasn't taken any exams";
+		}
+		return "Student " + String.valueOf(studentId) + " : " + String.valueOf(avg);
 	}
 	
 	/**
@@ -216,7 +236,13 @@ public class University {
 	 * @return the course average formatted as a string
 	 */
 	public String courseAvg(int courseId) {
-		return null;
+		Course currentCourse = courses[courseId - FIRST_COURSE_ID];
+		double avg = currentCourse.averageGrade();
+
+		if (avg == ABSENT_GRADE) {
+			return "No student has taken the exam in " + currentCourse.getCourseTitle();
+		}
+		return "The average for the course " + currentCourse.getCourseTitle() + " is: " + String.valueOf(avg);
 	}
 	
 
@@ -237,7 +263,45 @@ public class University {
 	 * @return info on the best three students.
 	 */
 	public String topThreeStudents() {
-		return null;
+		// to store top three students indexes
+		int first = -1;
+		int second = -1;
+		int third = -1;
+
+		double[] scores = new double[studentCount];
+
+		for (int i=0; i<studentCount; i++) {
+			scores[i] = students[i].score();
+		}
+		// assuming there are no ties
+		for (int i=0; i<studentCount; i++) {
+			if (first == -1 || scores[i] > scores[first]) {
+				third = second;
+				second = first;
+				first = i;
+			}
+			else if (second == -1 || scores[i] > scores[second]) {
+				third = second;
+				second = i;
+
+			}
+			else if (third == -1 || scores[i] > scores[third]) {
+				third = i;
+			}
+			
+		}
+		String topStudentsPrint = "";
+		if (first != -1) {
+			topStudentsPrint += students[first].getFirstName() + " " + students[first].getLastName() + " : " + scores[first] + "\n";
+		}
+		if (second != -1) {
+			topStudentsPrint += students[second].getFirstName() + " " + students[second].getLastName() + " : " + scores[second] + "\n";
+		}
+		if (third != -1) {
+			topStudentsPrint += students[third].getFirstName() + " " + students[third].getLastName() + " : " + scores[third] + "\n";
+		}
+
+		return topStudentsPrint;
 	}
 
 // R7
