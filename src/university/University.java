@@ -291,13 +291,13 @@ public class University {
 			
 		}
 		String topStudentsPrint = "";
-		if (first != -1) {
+		if (first != -1 && scores[first] != ABSENT_GRADE) {
 			topStudentsPrint += students[first].getFirstName() + " " + students[first].getLastName() + " : " + scores[first] + "\n";
 		}
-		if (second != -1) {
+		if (second != -1 && scores[second] != ABSENT_GRADE) {
 			topStudentsPrint += students[second].getFirstName() + " " + students[second].getLastName() + " : " + scores[second] + "\n";
 		}
-		if (third != -1) {
+		if (third != -1 && scores[third] != ABSENT_GRADE) {
 			topStudentsPrint += students[third].getFirstName() + " " + students[third].getLastName() + " : " + scores[third] + "\n";
 		}
 
